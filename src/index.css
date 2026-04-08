@@ -6,6 +6,52 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 150 10% 10%;
+
+    --card: 140 20% 97%;
+    --card-foreground: 150 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 10% 10%;
+
+    --primary: 152 60% 36%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 150 20% 92%;
+    --secondary-foreground: 150 40% 20%;
+
+    --muted: 140 15% 95%;
+    --muted-foreground: 150 10% 40%;
+
+    --accent: 152 50% 92%;
+    --accent-foreground: 152 60% 25%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 15% 88%;
+    --input: 150 15% 88%;
+    --ring: 152 60% 36%;
+
+    --radius: 0.75rem;
+
+    --emergency-glow: 0 85% 55%;
+    --cyan-glow: 185 80% 45%;
+    --success: 145 65% 42%;
+    --warning: 45 95% 55%;
+
+    --sidebar-background: 140 20% 97%;
+    --sidebar-foreground: 150 10% 10%;
+    --sidebar-primary: 152 60% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 20% 92%;
+    --sidebar-accent-foreground: 150 10% 10%;
+    --sidebar-border: 150 15% 88%;
+    --sidebar-ring: 152 60% 36%;
+  }
+
+  .dark {
     --background: 220 20% 6%;
     --foreground: 210 20% 92%;
 
@@ -33,8 +79,6 @@
     --border: 220 15% 18%;
     --input: 220 15% 18%;
     --ring: 0 85% 55%;
-
-    --radius: 0.75rem;
 
     --emergency-glow: 0 85% 55%;
     --cyan-glow: 185 80% 45%;
@@ -103,4 +147,98 @@
 
 @keyframes dash {
   to { stroke-dashoffset: -20; }
+}
+
+/* Leaflet map marker styles */
+.hospital-marker,
+.user-location-marker,
+.ambulance-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.user-pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #3b82f6;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.user-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid white;
+  box-shadow: 0 0 12px #3b82f6;
+}
+
+.ambulance-pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid hsl(0 85% 55%);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.ambulance-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: hsl(0 85% 55%);
+  border: 2px solid white;
+  box-shadow: 0 0 12px hsl(0 85% 55%);
+}
+
+.map-popup-content {
+  font-family: 'Inter', sans-serif;
+  padding: 4px 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  background: hsl(var(--card) / 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  color: hsl(var(--foreground));
+}
+
+.leaflet-popup-tip {
+  background: hsl(var(--card) / 0.95);
+  border: 1px solid hsl(var(--border));
+}
+
+.leaflet-popup-close-button {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: hsl(var(--foreground)) !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
 }

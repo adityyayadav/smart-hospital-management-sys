@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Unused generated files
+test/
+bun.lock*
+bun.lockb
+playwright-fixture.ts
+playwright.config.ts

@@ -1,0 +1,80 @@
+const Hospital = require("../models/Hospital");
+
+// @desc    Get all hospitals
+// @route   GET /api/hospitals
+// @access  Public
+const getHospitals = async (req, res) => {
+  try {
+    const hospitals = await Hospital.find({});
+    res.json(hospitals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error fetching hospitals" });
+  }
+};
+
+// @desc    Create a hospital
+// @route   POST /api/hospitals
+// @access  Public (Can secure later)
+const createHospital = async (req, res) => {
+  try {
+    const {
+      name,
+      type,
+      distance,
+      eta,
+      icuBeds,
+      generalBeds,
+      doctors,
+      specialization,
+      status,
+      lat,
+      lng,
+      rating,
+      description,
+      phone,
+      email,
+      established,
+      specialties,
+    } = req.body;
+
+    const hospitalExists = await Hospital.findOne({ name });
+    if (hospitalExists) {
+      return res.status(400).json({ message: "Hospital with this name already exists" });
+    }
+
+    const hospital = await Hospital.create({
+      name,
+      type,
+      distance,
+      eta,
+      icuBeds,
+      generalBeds,
+      doctors,
+      specialization,
+      status,
+      lat,
+      lng,
+      rating,
+      description,
+      phone,
+      email,
+      established,
+      specialties,
+    });
+
+    if (hospital) {
+      res.status(201).json(hospital);
+    } else {
+      res.status(400).json({ message: "Invalid hospital data" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error creating hospital" });
+  }
+};
+
+module.exports = {
+  getHospitals,
+  createHospital,
+};

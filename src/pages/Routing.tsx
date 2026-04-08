@@ -11,8 +11,9 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { hospitalData, AMBULANCE_POSITION } from "@/data/hospitals";
+import { AMBULANCE_POSITION } from "@/data/hospitals";
 import type { Hospital } from "@/data/hospitals";
+import { useHospitals } from "@/hooks/useHospitals";
 import { haversineDistance } from "@/lib/dijkstra";
 
 type TravelMode = "car" | "bike" | "walk";
@@ -141,9 +142,11 @@ const Routing = () => {
   const [specialtyFilter, setSpecialtyFilter] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
 
+  const { data: hospitalData = [], isLoading: isHospitalsLoading } = useHospitals();
+
   const specialties = useMemo(
     () => [...new Set(hospitalData.map((h) => h.specialization))],
-    []
+    [hospitalData]
   );
 
   const filteredHospitals = useMemo(
@@ -157,7 +160,7 @@ const Routing = () => {
           h.specialization.toLowerCase().includes(search.toLowerCase());
         return matchType && matchSpecialty && matchSearch;
       }),
-    [search, typeFilter, specialtyFilter]
+    [hospitalData, search, typeFilter, specialtyFilter]
   );
 
   useEffect(() => {
@@ -225,7 +228,7 @@ const Routing = () => {
     if (bestHospital) {
       await handleSelectHospital(bestHospital.name);
     }
-  }, [userPosition, handleSelectHospital]);
+  }, [userPosition, hospitalData, handleSelectHospital]);
 
   const getUserDistanceToHospital = useCallback(
     (hospital: Hospital) => {
@@ -241,11 +244,13 @@ const Routing = () => {
   const bounds = useMemo(() => {
     const lats = hospitalData.map((h) => h.lat).concat(userPosition[0]);
     const lngs = hospitalData.map((h) => h.lng).concat(userPosition[1]);
+    if (lats.length === 1) return undefined; // Only user location
+
     return L.latLngBounds(
       [Math.min(...lats) - 0.01, Math.min(...lngs) - 0.01],
       [Math.max(...lats) + 0.01, Math.max(...lngs) + 0.01]
     );
-  }, [userPosition]);
+  }, [userPosition, hospitalData]);
 
   const clearFilters = () => {
     setSearch("");
@@ -518,6 +523,11 @@ const Routing = () => {
                   <p className="text-[10px] font-mono text-muted-foreground tracking-wider sticky top-0 bg-background py-1 z-10">
                     HOSPITALS ({filteredHospitals.length})
                   </p>
+                  {isHospitalsLoading ? (
+                    <div className="py-8 flex justify-center text-primary">
+                      <span className="animate-pulse text-xs font-mono">LOADING LIVE DATA...</span>
+                    </div>
+                  ) : (
                   <motion.div
                     variants={staggerContainer}
                     initial="hidden"
@@ -608,8 +618,9 @@ const Routing = () => {
                       );
                     })}
                   </motion.div>
+                  )}
 
-                  {filteredHospitals.length === 0 && (
+                  {!isHospitalsLoading && filteredHospitals.length === 0 && (
                     <div className="text-center py-8">
                       <p className="text-sm text-muted-foreground">No hospitals match your search.</p>
                       <button onClick={clearFilters} className="text-xs text-primary hover:underline mt-1">

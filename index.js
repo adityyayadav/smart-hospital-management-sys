@@ -4,6 +4,7 @@ const { connectToMongoDB } = require("./backend/connect");
 const authRoutes = require("./backend/routes/authRoutes");
 const visitRoutes = require("./backend/routes/visitRoutes");
 const profileRoutes = require("./backend/routes/profileRoutes");
+const hospitalRoutes = require("./backend/routes/hospitalRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/visits", visitRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/hospitals", hospitalRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "MediRoute API is running" });
